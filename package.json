@@ -1,0 +1,27 @@
+{
+  "name": "douban-trailer-scott",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lengband/douban-trailer-scott.git"
+  },
+  "keywords": [
+    "move",
+    "trailer"
+  ],
+  "author": "wangpeng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lengband/douban-trailer-scott/issues"
+  },
+  "homepage": "https://github.com/lengband/douban-trailer-scott#readme",
+  "dependencies": {
+    "koa": "^2.5.2"
+  }
+}
