@@ -3,7 +3,8 @@ const app = new Koa()
 const views = require('koa-views')
 const { resolve } = require('path')
 
-require('./crawler/trailer-list')
+// require('./crawler/trailer-list')
+require('./crawler/trailer-test')
 
 app.use(views(resolve(__dirname, './views'), {
   extension: 'pug'
