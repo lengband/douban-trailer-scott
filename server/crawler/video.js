@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer')
 
 const base = 'https://movie.douban.com/subject/'
-const doubanId = '26739551'
+const doubanId = '27606054'
 const videoBase = `https://movie.douban.com/trailer/219491`
 
 const sleep = time => new Promise(resolve => {
@@ -27,7 +27,7 @@ const sleep = time => new Promise(resolve => {
     if (it && it.length > 0) {
       var link = it.attr('href')
       var coverUrl = it.css('backgroundImage')
-      var cover = coverUrl.replace(/url\("(.+)\?"\)/, '$1')
+      var cover = coverUrl.replace(/url\("(.+)\?.*"\)/, '$1')
       return {
         link,
         cover
