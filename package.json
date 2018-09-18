@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/lengband/douban-trailer-scott#readme",
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "ejs": "^2.6.1",
     "koa": "^2.5.2",
     "koa-views": "^6.1.4",
