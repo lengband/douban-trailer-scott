@@ -8,8 +8,8 @@ const { connect, initSchemas } = require('./database/init');
   try {
     await connect()
     initSchemas()
-    const Movie = mongoose.model('Movie')
-    const movies = await Movie.find({})
+    // const Movie = mongoose.model('Movie')
+    // const movies = await Movie.find({})
   } catch (error) {
     console.log(error)
   }
