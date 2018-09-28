@@ -6,7 +6,9 @@ const videoBase = `https://movie.douban.com/trailer/219491`
 
 const sleep = time => new Promise(resolve => {
   setTimeout(resolve, time)
-});
+}).catch(error => {
+  console.log(error)
+});;
 
 (async () => {
   console.log('start visit the target page')

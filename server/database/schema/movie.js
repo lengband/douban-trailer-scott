@@ -1,12 +1,18 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const Mixed = Schema.Types.Mixed
+const { Mixed, ObjectId } = Schema.Types
 
 const movieSchema = new Schema({
   doubanId: {
     unique: true,
     type: String
   },
+
+  category: {
+    type: ObjectId,
+    ref: 'Category'
+  },
+
   rate: Number,
   title: String,
   summary: String,
@@ -44,5 +50,5 @@ movieSchema.pre('save', next => {
   }
   next()
 })
-
+console.log(123)
 mongoose.model('Movie', movieSchema)
