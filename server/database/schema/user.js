@@ -38,15 +38,15 @@ const userSchema = new Schema({
   }
 })
 
-userSchema.virtual('isLocked').get(() => {
+userSchema.virtual('isLocked').get(function () {
   return !!(this.lockUntil && this.lockUntil > Date.now())
 })
 
-userSchema.pre('save', next => {
+userSchema.pre('save', function (next) {
   if (!this.isModified('password')) return next()
-  bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
+  bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
     if (err) return next(err)
-    bcrypt.hash(this.password, salt, (error, hash) => {
+    bcrypt.hash(this.password, salt, function (error, hash) {
       if (error) return next(error)
       this.password = hash
       next()

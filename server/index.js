@@ -6,10 +6,10 @@ const { connect, initSchemas } = require('./database/init');
 
 (async () => {
   try {
-    await connect()
-    initSchemas()
-    // const Movie = mongoose.model('Movie')
-    // const movies = await Movie.find({})
+    await connect();
+    initSchemas();
+    // require('./tasks/movie');
+    require('./tasks/api');
   } catch (error) {
     console.log(error)
   }
