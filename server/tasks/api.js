@@ -60,7 +60,7 @@ async function fetchMovie(item) {
           }
           await cat.save()
           if (!movie.category) {
-            movie.Category.push(cat._id)
+            movie.category.push(cat._id)
           } else {
             if (movie.category.indexOf(cat._id) === -1) {
               movie.category.push(cat._id)
