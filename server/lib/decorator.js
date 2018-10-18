@@ -6,7 +6,7 @@ const glob = require('glob')
 const symbolPrefix = Symbol('prefix')
 const routerMap = new Map()
 
-const isArray = c => _.isArray(c) ? c : []
+const isArray = c => _.isArray(c) ? c : [c]
 
 export class Route {
   constructor (app, apiPath) {
@@ -15,7 +15,9 @@ export class Route {
     this.router = new Router()
   }
   init () {
-    glob.sync(resolve(this.apiPath, '**/*.js')).forEach(require)
+    // require
+    glob.sync(resolve(this.apiPath, './*.js')).forEach(require)
+
     for (let [ conf, controller ] of routerMap) {
       const controllers = isArray(controller)
       const prefixPath = conf.target[symbolPrefix]
@@ -24,7 +26,7 @@ export class Route {
       this.router[conf.method](routerPath, ...controllers)
     }
     this.app.use(this.router.routes())
-    this.app.use(this.router.all())
+    this.app.use(this.router.allowedMethods())
   }
 }
 

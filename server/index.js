@@ -1,36 +1,32 @@
 const Koa = require('koa')
 const mongoose = require('mongoose')
 const views = require('koa-views')
-const { resolve } = require('path');
+const { resolve, join } = require('path');
 const { connect, initSchemas } = require('./database/init');
-const router = require('./routes');
+const R = require('ramda')
+const MIDDLEWARES = ['router']
+
+const useMiddlewares = app => {
+  R.map(
+    R.compose(
+      R.forEachObjIndexed(initWith => initWith(app)),
+      require,
+      name => join(__dirname, `./middlewares/${name}`)
+    )
+  )(MIDDLEWARES)
+}
 
 (async () => {
   try {
     await connect();
     initSchemas();
+    // await initAdmin()
+    const app = new Koa();
+    await useMiddlewares(app)
+    app.listen(4455)
     // require('./tasks/movie');
     require('./tasks/api');
   } catch (error) {
     console.log(error)
   }
 })();
-
-const app = new Koa();
-
-// app
-//   .use(router.routes())
-//   .use(router.allowedMethods())
-
-app.use(views(resolve(__dirname, './views'), {
-  extension: 'pug'
-}));
-
-app.use(async (ctx, next) => {
-  await ctx.render('index', {
-    you: 'Scott',
-    me: 'WangPeng'
-  })  
-})
-console.log('port at 4455')
-app.listen(4455)
