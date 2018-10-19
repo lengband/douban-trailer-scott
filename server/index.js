@@ -1,10 +1,8 @@
 const Koa = require('koa')
-const mongoose = require('mongoose')
-const views = require('koa-views')
-const { resolve, join } = require('path');
+const { join } = require('path');
 const { connect, initSchemas } = require('./database/init');
 const R = require('ramda')
-const MIDDLEWARES = ['router']
+const MIDDLEWARES = ['router', 'parcel']
 
 const useMiddlewares = app => {
   R.map(
