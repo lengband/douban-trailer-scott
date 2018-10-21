@@ -8,18 +8,18 @@ const {
 const { 
   gettAllMovies,
   getMovieDetail,
-  relativeMovies
+  getRelativeMovies
 } = require('../service/movie')
 
 @controller('api/v0/movies')
 export class movieController {
   @get('/')
   async getMovies (ctx, next) {
-    const Movie = mongoose.model('Movie')
     const { type, year } = ctx.query
     const movies = await gettAllMovies(type, year)
     ctx.body = {
-      movies
+      success: true,
+      data: movies
     }
   }
 

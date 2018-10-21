@@ -3,12 +3,12 @@ import { Menu, Spin } from 'antd'
 import navRoutes from '../nav'
 
 const getMenuContent = ({ path, name }) => (
-  <a href={{ path: path || '/' }} style={{color: '$fff2e8'}}>
+  <a href={  path || '/' } style={{color: '$fff2e8'}}>
     {name}
   </a>
 )
 export default class LayoutDefault extends Component {
-  constructor () {
+  constructor (props) {
     super(props)
     this.state = {
       loading: false,
@@ -22,24 +22,25 @@ export default class LayoutDefault extends Component {
     window.__LOADING__ = null
   }
   matchRouteName = this.props.match
-    ? navRoutes.find(E => e.name === this.props.match.params.type)
+    ? navRoutes.find(e => e.name === this.props.match.params.type)
       ? navRoutes.find(e => e.name === this.props.match.params.type).name
       : '全部'
     : navRoutes[0].name
-  toggleLoading = (stats = false, tip = "在等一下哦") => {
+  toggleLoading = (status = false, tip = "在等一下哦") => {
     this.setState({
       tip,
-      loading: stats
+      loading: status
     })
   }
   render () {
     const { children } = this.props
-    const { loading, tip } = state
+    const { loading, tip } = this.state
     return (
       <div className="flex-colum" style={{ width: '100%', height: '100%' }}>
         <Menu
           mode="horizontal"
-          style={{ fontSize: 13.5, backgroundColor: '#000' }}
+          theme="dark"
+          style={{ fontSize: 13.5 }}
           defaultSelectedKeys={[ this.matchRouteName ]}
         >
           <Menu.Item style={{
@@ -54,15 +55,13 @@ export default class LayoutDefault extends Component {
               黑骑预告片
             </a>
           </Menu.Item>
-          <Menu.Item>
-            {
-              navRoutes.map((e, i) => (
-                <Menu.Item key={e.name}>
-                  { getMenuContent({...e}) }
-                </Menu.Item>
-              ))
-            }
-          </Menu.Item>
+          {
+            navRoutes.map((e) => (
+              <Menu.Item key={e.name}>
+                { getMenuContent({...e}) }
+              </Menu.Item>
+            ))
+          }
         </Menu>
         <Spin
           spinning={ loading }

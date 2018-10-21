@@ -4,7 +4,7 @@ import { message } from 'antd'
 const defaultAxiosConf = {
   timeout: 5000
 }
-const _request = (param = {}, fn = () => {}) => {
+const _request = (params = {}, fn = () => {}) => {
   return axios({
     ...defaultAxiosConf,
     ...params

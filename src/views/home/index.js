@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { request } from '../../lib'
 import Layout from '../../layouts/default'
+import Content from './content'
 import {
   Menu
 } from 'antd'
@@ -9,7 +10,7 @@ export default class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      year: ['2025', '2024', '2023', '2022', '2021', '2020', '2019', '2018'],
+      years: ['2025', '2024', '2023', '2022', '2021', '2020', '2019', '2018'],
       type: this.props.match.params.type,
       type: this.props.match.params.year,
       movies: []
@@ -31,12 +32,12 @@ export default class Home extends Component {
     })
   }
   _getAllMovies () {
-    request(window.__LOADING__,)({
+    request(window.__LOADING__)({
       method: 'get',
-      url: `/movies?type=${this.state.type || ''}&year=${this.state.year || ''}`
-    }).then(res => {
+      url: `api/v0/movies?type=${this.state.type || ''}&year=${this.state.year || ''}`
+    }).then(movies => {
       this.setState({
-        movies: res
+        movies
       })
     }).catch(() => {
       this.setState({
@@ -48,7 +49,7 @@ export default class Home extends Component {
     const { years, selectedKey } = this.state
     return (
       <Layout {...this.props}>
-        <div className="flex-rot full">
+        <div className="flex-row full">
           <Menu
             defaultSelectedKeys={[selectedKey]}
             mode="inline"
