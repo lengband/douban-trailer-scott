@@ -1,0 +1,32 @@
+import React, { Component } from 'react'
+
+export default (loadComponent, placeholder = '正在加载中...') => {
+  return class AsyncComponent extends Component {
+    constructor () {
+      super()
+      this.unmount = false
+      this.state = {
+        Child: null
+      }
+    }
+    componentWillUnmount () {
+      this.unmount = true
+    }
+    async componentDidMount () {
+      const { default: Child } = await loadComponent()
+      console.log(Child, 'Child')
+      if (this.unmount) return
+      this.setState({
+        Child
+      })
+    }
+    render () {
+      const { Child } = this.state
+      return (
+        Child
+          ? <Child { ...this.props } />
+          : placeholder
+      )
+    }
+  }
+}
