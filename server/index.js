@@ -22,8 +22,9 @@ const useMiddlewares = app => {
     const app = new Koa();
     await useMiddlewares(app)
     app.listen(4455)
-    // require('./tasks/movie');
-    require('./tasks/api');
+    // require('./tasks/qiniu');
+    // require('./tasks/api');
+    // require('./tasks/qiniu');
   } catch (error) {
     console.log(error)
   }

@@ -1,28 +1,53 @@
-const cp = require('child_process');
-const { resolve } = require('path');
+const cp = require('child_process')
+const { resolve } = require('path')
+const mongoose = require('mongoose')
 
-(async () => {
-  const script = resolve(__dirname, '../crawler/video.js')
-  const child = cp.fork(script, [])
+const Movie = mongoose.model('Movie')
+
+;(async () => {
+  let movies = await Movie.find({
+    $or: [
+      {video: {$exists: false}},
+      {video: null}
+    ]
+  }).exec()
+
   let invoked = false
+  let script = resolve(__dirname, '../crawler/video')
+  let child = cp.fork(script, [])
 
   child.on('error', err => {
     if (invoked) return
     invoked = true
-    console.log(err, 'movie---------->error -> err')
+    
+    console.log(err)
   })
 
   child.on('exit', code => {
     if (invoked) return
-
-    invoked = true
-    let err = code === 0 ? null : new Error('exit code' + code)
-    console.log(err, 'movie---------->exit -> err')
+    invoked = false
+    let err = code === 0 ? null : new Error('exit code ' + code)
+    
+    console.log(err)
   })
 
-  child.on('message', data => {
-    // https://img3.doubanio.com/img/trailer/medium/2531818052.jpg
-    let result = data
-    console.log(result, 'movie---------->on -> message')
+  child.on('message', async data => {
+    let doubanId = data.doubanId
+    let movie = await Movie.findOne({
+      doubanId: doubanId
+    }).exec()
+    
+    console.log(data, 'data')
+    if (data.video) {
+      movie.video = data.video
+      movie.cover = data.cover
+
+      await movie.save()
+    } else {
+      await movie.remove()
+    }
   })
+
+  child.send(movies)
 })()
+  

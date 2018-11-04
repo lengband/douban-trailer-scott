@@ -1,13 +1,14 @@
 const Bundler = require('parcel-bundler')
 const views = require('koa-views')
 const serve = require('koa-static')
-const { resolve } = require('path')
+const { resolve } = require('path') // ? 和 resolve 的区别
 
 const r = path => resolve(__dirname, path)
 
 const bundler = new Bundler(r('../../../src/index.html'), {
   publicUrl: '/',
-  watch: true
+  watch: true,
+  cache: true
 })
 
 export const dev = async app => {
