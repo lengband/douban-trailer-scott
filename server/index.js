@@ -1,8 +1,8 @@
 const Koa = require('koa')
 const { join } = require('path');
-const { connect, initSchemas } = require('./database/init');
+const { connect, initSchemas, initAdmin } = require('./database/init');
 const R = require('ramda')
-const MIDDLEWARES = ['router', 'parcel']
+const MIDDLEWARES = ['common', 'router', 'parcel']
 
 const useMiddlewares = app => {
   R.map(
@@ -18,7 +18,7 @@ const useMiddlewares = app => {
   try {
     await connect();
     initSchemas();
-    // await initAdmin()
+    await initAdmin()
     const app = new Koa();
     await useMiddlewares(app)
     app.listen(4455)

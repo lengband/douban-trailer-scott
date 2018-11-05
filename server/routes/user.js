@@ -9,13 +9,13 @@ const {
   checkPassword
 } = require('../service/user')
 
-@controller('api/v0/user')
+@controller('/admin')
 export class userController {
-  @get('/')
+  @post('/login')
   async login (ctx, next) {
     const { email, password } = ctx.request.body
-    const matchData = await this.checkPassword(email, password)
-
+    const matchData = await checkPassword(email, password)
+    console.log(matchData, 'matchData')
     if (!matchData.user) {
       return (ctx.body = {
         success: false,

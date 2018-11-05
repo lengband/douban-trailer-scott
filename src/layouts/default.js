@@ -52,7 +52,7 @@ export default class LayoutDefault extends Component {
             float: 'left'
           }}>
             <a href={'/'} className="hover-scale logo-text" style={{ color: '#ff2e8' }}>
-              黑骑预告片
+              神奇预告片
             </a>
           </Menu.Item>
           {

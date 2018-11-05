@@ -55,10 +55,12 @@ userSchema.pre('save', function (next) {
   next()
 })
 
-userSchema.method = {
+userSchema.methods = {
   comparePassword: (_password, password) => {
+    const salt = bcrypt.genSaltSync(SALT_WORK_FACTOR)
+    const hash = bcrypt.hashSync(password, salt)
     return new Promise((resolve, reject) => {
-      bcrypt.compare(_password, password, (err, isMatch) => {
+      bcrypt.compare(_password, hash, function (err, isMatch) {
         if (!err) resolve(isMatch)
         else reject(err)
       })

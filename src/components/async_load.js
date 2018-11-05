@@ -14,7 +14,6 @@ export default (loadComponent, placeholder = '正在加载中...') => {
     }
     async componentDidMount () {
       const { default: Child } = await loadComponent()
-      console.log(Child, 'Child')
       if (this.unmount) return
       this.setState({
         Child

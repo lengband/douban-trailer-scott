@@ -16,12 +16,13 @@ const _request = (params = {}, fn = () => {}) => {
     }
     if (success) {
       fn(false)
+      if (!data) return res.data
       return data
     }
     throw err
   }).catch(err => {
     fn(false)
-    message.err(String(err || '网络错误'))
+    message.error(String(err || '网络错误'))
   })
 }
 export default param => {
