@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
+const Movie = mongoose.model('Movie')
 
 export async function checkPassword (email, password) {
   let match = false
@@ -7,9 +8,21 @@ export async function checkPassword (email, password) {
   if (user) {
     match = await user.comparePassword(password, user.password)
   }
-  console.log(match, 'match')
   return {
     match,
     user
   }
 }
+
+export async function findAndRemove (id) {
+  const valid = mongoose.Types.ObjectId.isValid(id)
+  if (valid) {
+    const movie = await Movie.findOne({ _id: id })
+    if (movie) {
+      await movie.remove()
+      return true
+    }
+  }
+  return false
+}
+
