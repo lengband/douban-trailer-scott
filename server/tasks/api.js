@@ -26,13 +26,13 @@ async function fetchMovie(item) {
       { summary: null },
       { title: '' },
       { year: { $exists: false } },
-      { summary: '' }
+      { summary: '' },
+      { category: { $exists: false } }
     ]
   })
   for (let i = 0; i < movies.length; i++) { // test
     let movie = movies[i]
     let movieData = await fetchMovie(movie)
-
     if (movieData) {
       let tags = movieData.tags || []
       movie.tags = movie.tags || []
@@ -42,7 +42,6 @@ async function fetchMovie(item) {
       if (movieData.attrs) {
         movie.movieTypes = movieData.attrs.movie_type || []
         movie.year = movieData.attrs.year[0] || 2500
-
         for (let i = 0; i < movie.movieTypes.length; i++) {
           let item = movie.movieTypes[i]
           let cat = await Category.findOne({
@@ -58,9 +57,9 @@ async function fetchMovie(item) {
               cat.movies.push(movie._id)
             }
           }
-          await cat.save()
+          cat.save()
           if (!movie.category) {
-            movie.category.push(cat._id)
+            movie.category = [cat._id]
           } else {
             if (movie.category.indexOf(cat._id) === -1) {
               movie.category.push(cat._id)
@@ -88,9 +87,8 @@ async function fetchMovie(item) {
       tags.forEach(tag => {
         movie.tags.push(tag.name)
       })
-      
-      console.log(movie, 'movie------movie')
-      await movie.save()
+      // console.log(movie, 'movie------movie')
+      movie.save()
     }
   }
   

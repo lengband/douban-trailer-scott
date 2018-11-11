@@ -8,7 +8,7 @@ mongoose.Promise = global.Promise
 exports.initSchemas = () => {
   glob.sync(resolve(__dirname, './schema/', '**/*.js')).forEach(require)
 }
-
+  
 exports.initAdmin = async () => {
   const User = mongoose.model('User')
   let user = await User.findOne({
@@ -56,13 +56,6 @@ exports.connect = () => {
     })
 
     mongoose.connection.once('open', () => {
-      // const Dog = mongoose.model('Dog', {
-      //   name: String
-      // })
-      // const doga = new Dog({ name: '李福贵' })
-      // doga.save().then(() => {
-      //   console.log('富贵：汪汪汪！')
-      // })
       console.log('Mongodb Connected Successfully!')
       resolve()
     })

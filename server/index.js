@@ -17,12 +17,13 @@ const useMiddlewares = app => {
 (async () => {
   try {
     await connect();
-    initSchemas();
+    await initSchemas();
     await initAdmin()
     const app = new Koa();
     await useMiddlewares(app)
     app.listen(4455)
-    // require('./tasks/qiniu');
+    // require('./tasks/trailer-list');
+    // require('./tasks/video');
     // require('./tasks/api');
     // require('./tasks/qiniu');
   } catch (error) {

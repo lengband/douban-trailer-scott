@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const Mixed = Schema.Types.Mixed
+const ObjectId = Schema.Types.ObjectId
 
 const MovieSchema = new mongoose.Schema({
   doubanId: String,
@@ -14,7 +15,12 @@ const MovieSchema = new mongoose.Schema({
   coverKey: String,
   posterKey: String,
   rawTitle: String,
+  year: String,
   movieTypes: [String],
+  category: [{
+    type: ObjectId,
+    ref: 'Category'
+  }],
   pubdate: Mixed,
   tags: Mixed,
   meta: {
@@ -27,6 +33,8 @@ const MovieSchema = new mongoose.Schema({
       default: Date.now()
     }
   }
+}, {
+  usePushEach: true
 })
 
 MovieSchema.pre('save', function (next) {

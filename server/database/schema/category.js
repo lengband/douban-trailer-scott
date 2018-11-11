@@ -21,6 +21,8 @@ const categorySchema = new Schema({
       default: Date.now()
     }
   }
+}, {
+  usePushEach: true
 })
 
 categorySchema.pre('save', function (next) {
