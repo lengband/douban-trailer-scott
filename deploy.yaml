@@ -17,7 +17,7 @@ deploy:
     path:
       /www/koa2/production/
     ssh_options: StrictHostKeyChecking=no
-    pre-deploy: git fetch --all
+    # pre-deploy: git fetch --all
     post-delpoy: 'npm install && npm run build && pm2 startOrRestart deploy.yaml --env production'
     env:
       NODE_ENV: production
