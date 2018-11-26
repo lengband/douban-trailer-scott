@@ -15,7 +15,7 @@ deploy:
     repo:
       git@github.com:lengband/douban-trailer-scott.git
     path:
-      /www/koa2/production
+      /www/koa2/production/
     ssh_options: StrictHostKeyChecking=no
     pre-deploy: git fetch --all
     post-delpoy: 'npm install && npm run build && pm2 startOrRestart deploy.yaml --env production'
