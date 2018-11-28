@@ -1,6 +1,6 @@
 apps:
   - script: ./server/index.js
-    name: 'Koa2'
+    name: 'Koa2-trailer'
     env:
       COMMON_VARIABLE: true
     env_production:
