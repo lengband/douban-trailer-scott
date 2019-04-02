@@ -10,7 +10,7 @@ import 'moment/locale/zh-cn'
 import './list.sass'
 moment.locale('zh-cn')
 
-export default class Home extends Component {
+export default class AdminList extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -114,8 +114,6 @@ export default class Home extends Component {
   }
 
   _deleteMovie = (id) => {
-    id = 12345678
-    console.log(id)
     request({
       method: 'delete',
       url: `/admin/movies?id=${id}`

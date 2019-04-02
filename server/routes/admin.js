@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
 const { 
   controller,
-  get,
   post,
-  del,
-  auth,
+  required,
+  get,
   admin,
-  required
+  auth
 } = require('../lib/decorator');
 const { checkPassword, findAndRemove } = require('../service/user')
 const { gettAllMovies } = require('../service/movie')
 
 @controller('/admin')
 export class adminController {
+
   @get('/movie/list')
   @auth
   @admin('admin')
@@ -21,30 +21,6 @@ export class adminController {
     ctx.body = {
       success: true,
       data: movies
-    }
-  }
-
-  @del('/movies')
-  @required({
-    query: ['id']
-  })
-  async remove (ctx, next) {
-    const id = ctx.query.id
-    const movie = await findAndRemove(id)
-    const movies = await gettAllMovies()
-    if (movie) {
-      ctx.body = {
-        code: 200,
-        success: true,
-        data: movies
-      }
-    } else {
-      ctx.body = {
-        code: 404,
-        success: false,
-        err: `未找到 ${id}`,
-        data: movies
-      }
     }
   }
 

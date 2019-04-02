@@ -1,16 +1,28 @@
-class Boy {
-  @speak
-  run () {
-    console.log('I can run!')
+export const auth = (target, key, descriptor) => {
+  // target[key] = '卢本伟'
+  target['b'] = 'mewo~'
+  return descriptor
+}
+const test = (target, key, descriptor) => {
+  return descriptor
+}
+
+class adminController {
+  b () {
+  }
+  @test
+  @auth
+  getMovieList (ctx, next) {
+    console.log('i am getMovieList')
   }
 }
 
-function speak(target, key, descriptor) {
-  console.log(target)
-  console.log(key)
-  console.log(descriptor)
-}
+const a = new adminController()
+const b = new adminController()
 
-const luck = new Boy()
+console.log(a.b)
 
-luck.run()
+console.log(adminController.prototype.b)
+
+// console.log(a === adminController.prototype)
+

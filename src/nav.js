@@ -1,7 +1,7 @@
 export default [
   {
     name: '全部',
-    path: '/'
+    path: '/list'
   },
   {
     name: '科幻',
