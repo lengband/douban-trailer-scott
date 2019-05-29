@@ -2,11 +2,8 @@ import React, { Component } from 'react'
 import { Menu, Spin } from 'antd'
 import navRoutes from '../nav'
 
-const getMenuContent = ({ path, name }) => (
-  <a href={  path || '/' } style={{color: '$fff2e8'}}>
-    {name}
-  </a>
-)
+const qs = require('qs')
+
 export default class LayoutDefault extends Component {
   constructor (props) {
     super(props)
@@ -17,21 +14,42 @@ export default class LayoutDefault extends Component {
   }
   componentDidMount () {
     window.__LOADING__ = this.toggleLoading
+    this._getMatchRoute()
   }
   componentWillUnmount () {
     window.__LOADING__ = null
   }
-  matchRouteName = this.props.match
-    ? navRoutes.find(e => e.name === this.props.match.params.type)
-      ? navRoutes.find(e => e.name === this.props.match.params.type).name
-      : '全部'
-    : navRoutes[0].name
+  
+  matchRouteType = navRoutes[0].type
+  
+  _getMatchRoute () {
+    const queryObj = qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+    if (queryObj.type) {
+      this.matchRouteType = queryObj.type
+    }
+  }
+  menuSelect ({ key }) {
+    this.matchRouteType = key
+  }
   toggleLoading = (status = false, tip = "在等一下哦") => {
     this.setState({
       tip,
       loading: status
     })
   }
+  pushType (type) {
+    let { pathname, search } = this.props.location
+    const searchObj = qs.parse(search, { ignoreQueryPrefix: true })
+    searchObj.type = type
+    if (type === '/') delete searchObj.type
+    const searchStr = qs.stringify(searchObj)
+    this.props.history.push(`${pathname}?${searchStr}`)
+  }
+  _getMenuContent = ({ type, name }) => (
+    <a onClick={() => this.pushType(type)} style={{color: '#fff2e8'}}>
+      {name}
+    </a>
+  )
   render () {
     const { children } = this.props
     const { loading, tip } = this.state
@@ -41,24 +59,26 @@ export default class LayoutDefault extends Component {
           mode="horizontal"
           theme="dark"
           style={{ fontSize: 13.5 }}
-          defaultSelectedKeys={[ this.matchRouteName ]}
+          onSelect={this.menuSelect.bind(this)}
+          selectedKeys={[ this.matchRouteType ]}
         >
-          <Menu.Item style={{
-            marginLeft: 24,
-            marginRight: 30,
-            fontSize: 18,
-            textAlign: 'center',
-            color: '#fff !important',
-            float: 'left'
-          }}>
+          <Menu.Item
+            style={{
+              marginLeft: 24,
+              marginRight: 30,
+              fontSize: 18,
+              textAlign: 'center',
+              color: '#fff !important',
+              float: 'left'
+            }}>
             <a href={'/'} className="hover-scale logo-text" style={{ color: '#ff2e8' }}>
               神奇预告片
             </a>
           </Menu.Item>
           {
             navRoutes.map((e) => (
-              <Menu.Item key={e.name}>
-                { getMenuContent({...e}) }
+              <Menu.Item key={e.type}>
+                { this._getMenuContent({...e}) }
               </Menu.Item>
             ))
           }

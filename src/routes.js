@@ -4,7 +4,7 @@ export default [
   {
     name: '首页',
     icon: 'home',
-    path: '/',
+    path: ['/list', '/list/:id'],
     component: AC(() => import('./views/home'))
   },
   {

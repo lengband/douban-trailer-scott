@@ -4,8 +4,6 @@ const {
   get,
   admin,
   auth,
-  del,
-  required
 } = require('../lib/decorator');
 const { 
   gettAllMovies,
@@ -27,34 +25,11 @@ export class movieController {
     }
   }
 
-  @del('/movies')
-  @required({
-    query: ['id']
-  })
-  async remove (ctx, next) {
-    const id = ctx.query.id
-    const movie = await findAndRemove(id)
-    const movies = await gettAllMovies()
-    if (movie) {
-      ctx.body = {
-        code: 200,
-        success: true,
-        data: movies
-      }
-    } else {
-      ctx.body = {
-        code: 404,
-        success: false,
-        err: `未找到 ${id}`,
-        data: movies
-      }
-    }
-  }
-
   @get('/')
   async getMovies (ctx, next) {
     const { type, year } = ctx.query
     const movies = await gettAllMovies(type, year)
+    console.log(movies, 'movies')
     ctx.body = {
       success: true,
       data: movies

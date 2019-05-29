@@ -78,7 +78,6 @@ export default class Content extends Component {
 
   _renderContent = () => {
     const { movies } = this.props
-    console.log(movies, 'movies')
     return (
       <div style={{ padding: '30px' }}>
         <Row gutter={16}>
