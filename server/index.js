@@ -17,11 +17,10 @@ const useMiddlewares = app => {
 (async () => {
   try {
     await connect();
-    await initSchemas();
     await initAdmin()
     const app = new Koa();
     await useMiddlewares(app)
-    app.listen(4455)
+    app.listen(3003)
     // require('./tasks/trailer-list');
     // require('./tasks/video');
     // require('./tasks/api');

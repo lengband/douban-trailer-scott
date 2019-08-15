@@ -16,7 +16,6 @@ const Movie = mongoose.model('Movie');
 
     child.on('exit', code => {
       if (invoked) return
-
       invoked = true
       let err = code === 0 ? null : new Error('exit code' + code)
       console.log(err, 'movie---------->exit -> err')

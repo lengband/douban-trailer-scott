@@ -16,7 +16,7 @@ export class Route {
     this.router = new Router()
   }
   init () {
-    glob.sync(resolve(this.apiPath, './*.js')).forEach(require) // ? 下面的变量 是被 const 声明的，应该不会对其进行变量提示，为什么这里引入 装饰器函数 没有报 undefined ？
+    glob.sync(resolve(this.apiPath, './*.js')).forEach(require)
     for (let [ conf, controller ] of routerMap) {
       const controllers = isArray(controller)
       const prefixPath = conf.target[symbolPrefix]

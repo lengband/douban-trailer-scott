@@ -30,6 +30,7 @@ async function fetchMovie(item) {
       { category: { $exists: false } }
     ]
   })
+
   for (let i = 0; i < movies.length; i++) { // test
     let movie = movies[i]
     let movieData = await fetchMovie(movie)
