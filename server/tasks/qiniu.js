@@ -25,9 +25,9 @@ const uploadToQiniu = async (url, key) => {
       }
     })
   })
-}
+};
 
-;(async () => {
+(async () => {
   let movies = await Movie.find({
     $or: [
       {videoKey: {$exists: false}},

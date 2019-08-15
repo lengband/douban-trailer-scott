@@ -1,91 +1,41 @@
-const Router = require('koa-router')
-const { resolve } = require('path')
-const _ = require('lodash')
-const glob = require('glob')
-const R = require('ramda')
 
-const symbolPrefix = Symbol('prefix')
-const routerMap = new Map()
+import R from 'ramda'
+import { symbolPrefix } from './constants'
+import { changeToArr, resolvePath } from './utils'
 
-const isArray = c => _.isArray(c) ? c : [c]
+export const routerArr = [] // 输出到 routes/index 注册
 
-export class Route {
-  constructor (app, apiPath) {
-    this.app = app
-    this.apiPath = apiPath
-    this.router = new Router()
-  }
-  init () {
-    glob.sync(resolve(this.apiPath, './*.js')).forEach(require)
-    for (let [ conf, controller ] of routerMap) {
-      const controllers = isArray(controller)
-      const prefixPath = conf.target[symbolPrefix]
-      if (prefixPath) prefixPath = normalizePath(prefixPath)
-      const routerPath = prefixPath + conf.path
-      this.router[conf.method](routerPath, ...controllers)
-    }
-    this.app.use(this.router.routes())
-    this.app.use(this.router.allowedMethods())
-  }
-}
-
-const normalizePath = path => path.startsWith('/') ? path : `/${path}`
-
-const router = conf => (target, key, descriptor) => {
-  conf.path = normalizePath(conf.path)
-  routerMap.set({
+const setRouter = method => path => (target, key, descriptor) => {
+  routerArr.push({
     target,
-    ...conf
-  }, target[key])
-}
-
-export const controller = path => target => (target.prototype[symbolPrefix] = path)
-
-export const get = path => router({
-  method: 'get',
-  path
-})
-
-export const post = path => router({
-  method: 'post',
-  path
-})
-
-export const put = path => router({
-  method: 'put',
-  path
-})
-
-export const del = path => router({
-  method: 'delete',
-  path
-})
-
-export const use = path => router({
-  method: 'use',
-  path
-})
-
-export const all = path => router({
-  method: 'all',
-  path
-})
-
-const changeToArr = R.unless(
-  R.is(isArray),
-  R.of
-)
-
-const decorate = (args, middleware) => {
-  let [ target, key, descriptor ] = args
-  target[key] = isArray(target[key])
-  target[key].unshift(middleware)
+    method,
+    path: resolvePath(path),
+    callback: changeToArr(target[key])
+  })
   return descriptor
 }
 
-const convert = middleware => (...args) => decorate(args, middleware)
+export const Controller = path => target => (target.prototype[symbolPrefix] = path)
 
-export const admin = roleExpected => convert(async (ctx, next) => {
+export const Get = setRouter('get')
+
+export const Post = setRouter('post')
+
+export const Put = setRouter('put')
+
+export const Del = setRouter('delete')
+
+const convert = middleware => (target, key, descriptor) => {
+  target[key] = R.compose(
+    R.concat(
+      changeToArr(middleware)
+    ),
+    changeToArr
+  )(target[key])
+  return descriptor
+}
+
+export const Admin = roleExpected => convert(async (ctx, next) => {
   const { role } = ctx.session.user
   if (!role || role !== roleExpected) {
     return (
@@ -108,7 +58,7 @@ export const admin = roleExpected => convert(async (ctx, next) => {
   await next()
 })
 
-export const auth = convert(async (ctx, next) => {
+export const Auth = convert(async (ctx, next) => {
   if (!ctx.session.user) {
     return (
       ctx.body = {
@@ -121,18 +71,30 @@ export const auth = convert(async (ctx, next) => {
   await next()
 })
 
-export const required = rules => convert(async (ctx, next) => {
+/**
+ * @Required({
+ *   body: ['name', 'password']
+ * })
+ */
+export const Required = ruleObj => convert(async (ctx, next) => {
   let errors = []
-  const checkRules = R.forEachObjIndexed((value, key) => {
-    errors = R.filter(i => !R.has(i, ctx.request[key]))(value)
-  })
-  checkRules(rules)
-  if (errors.length) {
-    ctx.body = {
-      success: false,
-      code: 412,
-      err: `${errors.join(',')} is required`
+  R.forEachObjIndexed(
+    (value, key) => {
+      errors = errors.concat(
+        R.filter(
+          item => !R.has(item, ctx.request[key])
+        )(value)
+      )
     }
+  )(ruleObj)
+  if (!R.isEmpty(errors)) {
+    return (
+      ctx.body = {
+        success: false,
+        code: 412,
+        err: `${errors.join(',')} is required`
+      }
+    )
   }
   await next()
 })

@@ -1,27 +1,35 @@
-const Koa = require('koa')
-const { join } = require('path');
-const { connect, initSchemas, initAdmin } = require('./database/init');
-const R = require('ramda')
-const MIDDLEWARES = ['common', 'router', 'parcel']
+import Koa from 'koa'
+import { join } from 'path';
+import R from 'ramda'
+import chalk from 'chalk'
+import config from '../config'
+
+const MIDDLEWARES = ['database', 'common', 'router', 'parcel']
 
 const useMiddlewares = app => {
   R.map(
     R.compose(
-      R.forEachObjIndexed(initWith => initWith(app)),
+      R.forEachObjIndexed(init => init(app)),
       require,
       name => join(__dirname, `./middlewares/${name}`)
     )
   )(MIDDLEWARES)
 }
 
-(async () => {
+const start = async () => {
   try {
-    await initSchemas();
-    await connect();
-    await initAdmin()
     const app = new Koa();
+    const { port } = config
+
     await useMiddlewares(app)
-    app.listen(3003)
+    
+    app.listen(port, () => {
+      console.log(
+        process.env.NODE_ENV === 'development'
+          ? `Open ${chalk.green(`http://localhost:${port}`)}`
+          : `APP listening on porrt ${port}`
+      )
+    })
     // require('./tasks/trailer-list');
     // require('./tasks/video');
     // require('./tasks/api');
@@ -29,4 +37,6 @@ const useMiddlewares = app => {
   } catch (error) {
     console.log(error)
   }
-})();
+}
+
+start()

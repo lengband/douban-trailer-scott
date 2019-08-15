@@ -1,9 +1,8 @@
-const mongoose = require('mongoose');
 const { 
-  controller,
-  get,
-  admin,
-  auth,
+  Controller,
+  Get,
+  Admin,
+  Auth,
 } = require('../lib/decorator');
 const { 
   gettAllMovies,
@@ -11,12 +10,12 @@ const {
   getRelativeMovies
 } = require('../service/movie')
 
-@controller('api/v0/movies')
+@Controller('api/v0/movies')
 export class movieController {
 
-  @get('/movie/list')
-  @auth
-  @admin('admin')
+  @Get('/movie/list')
+  @Auth
+  @Admin('admin')
   async getMovieList (ctx, next) {
     const movies = await gettAllMovies()
     ctx.body = {
@@ -25,7 +24,7 @@ export class movieController {
     }
   }
 
-  @get('/')
+  @Get('/')
   async getMovies (ctx, next) {
     const { type, year } = ctx.query
     const movies = await gettAllMovies(type, year)
@@ -35,7 +34,7 @@ export class movieController {
     }
   }
 
-  @get('/:id')
+  @Get('/:id')
   async getMovieDetail (ctx, next) {
     const id = ctx.params.id
     const movie = await getMovieDetail(id)

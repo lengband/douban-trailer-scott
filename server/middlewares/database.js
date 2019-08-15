@@ -1,15 +1,13 @@
-const mongoose = require('mongoose')
-const db = 'mongodb://localhost/douban-test'
-const glob = require('glob')
-const { resolve } = require('path')
+import { join } from 'path'
+import glob from 'glob'
+import mongoose from 'mongoose'
+import config from '../../config'
 
 mongoose.Promise = global.Promise
 
-exports.initSchemas = () => {
-  glob.sync(resolve(__dirname, './schema/', '**/*.js')).forEach(require)
-}
+glob.sync(join(__dirname, '../database/schema', '**/*.js')).forEach(require)
   
-exports.initAdmin = async () => {
+export const initAdmin = async () => {
   const User = mongoose.model('User')
   let user = await User.findOne({
     username: 'lengband'
@@ -25,20 +23,25 @@ exports.initAdmin = async () => {
   }
 }
 
-exports.connect = () => {
+export const connect = app => {
+  const { db } = config
+
+  const connect = db => mongoose.connect(db, {
+    useNewUrlParser: true,
+    // useMongoClient: true
+  })
+
   let maxConnectTimes = 0
   return new Promise((resolve, reject) => {
     if (process.env.NODE_ENV !== 'production') {
       mongoose.set('debug', true)
     }
-    mongoose.connect(db, {
-      useNewUrlParser: true
-    })
+    connect(db)
 
     mongoose.connection.on('disconnected', () => {
       maxConnectTimes++
       if (maxConnectTimes < 5) {
-        mongoose.connect(db)
+        connect(db)
       } else {
         throw new Error('数据库挂了，快去修一哈~！')
       }
@@ -48,7 +51,7 @@ exports.connect = () => {
       console.log(error)
       maxConnectTimes++
       if (maxConnectTimes < 5) {
-        mongoose.connect(db)
+        connect(db)
       } else {
         reject()
         throw new Error('数据库挂了，快去修一哈~！')
@@ -60,5 +63,4 @@ exports.connect = () => {
       resolve()
     })
   })
-  
 }

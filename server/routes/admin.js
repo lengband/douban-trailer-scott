@@ -1,12 +1,11 @@
-const mongoose = require('mongoose');
 const {
-  controller,
-  post,
-  required,
-  get,
-  admin,
-  auth,
-  del,
+  Controller,
+  Post,
+  Required,
+  Get,
+  Admin,
+  Auth,
+  Del,
 } = require('../lib/decorator');
 const {
   checkPassword,
@@ -16,12 +15,12 @@ const {
   gettAllMovies
 } = require('../service/movie')
 
-@controller('/admin')
+@Controller('/admin')
 export class adminController {
 
-  @get('/movie/list')
-  @auth
-  @admin('admin')
+  @Get('/movie/list')
+  @Auth
+  @Admin('admin')
   async getMovieList(ctx, next) {
     const movies = await gettAllMovies()
     ctx.body = {
@@ -30,8 +29,8 @@ export class adminController {
     }
   }
 
-  @post('/login')
-  @required({
+  @Post('/login')
+  @Required({
     body: ['email', 'password']
   })
   async login(ctx, next) {
@@ -65,8 +64,8 @@ export class adminController {
     })
   }
 
-  @del('/movies')
-  @required({
+  @Del('/movies')
+  @Required({
     query: ['id']
   })
   async remove (ctx, next) {
