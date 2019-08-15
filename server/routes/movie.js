@@ -29,7 +29,6 @@ export class movieController {
   async getMovies (ctx, next) {
     const { type, year } = ctx.query
     const movies = await gettAllMovies(type, year)
-    console.log(movies, 'movies')
     ctx.body = {
       success: true,
       data: movies

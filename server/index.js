@@ -16,6 +16,7 @@ const useMiddlewares = app => {
 
 (async () => {
   try {
+    await initSchemas();
     await connect();
     await initAdmin()
     const app = new Koa();
