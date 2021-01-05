@@ -14,7 +14,7 @@
     "ali-oss": "^4.11.2",
     "antd": "^3.0.0",
     "autoprefixer": "^7.1.6",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
     "babel-loader": "^7.1.2",
